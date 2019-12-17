@@ -225,46 +225,32 @@ on Products.[Status] = ProductStatuses.ID;
 Select * from ViewProductReadableInclID
 
 -- De 5 mest populära produkterna per kategori
-Select TOP 5 Products.Name, Products.Category, ProductPopularityLogs.Popularity
-from ProductPopularityLogs
-inner JOIN Products
-on ProductPopularityLogs.Product = Products.ID
-group by Products.Name;
 
 --Se Popularitet per produkt
 CREATE OR ALTER VIEW ViewMostPopularProducts as
-Select SUM(PopularityCategories.Points) as PopularityPoints,  Products.ID
+Select Products.ID as Product, SUM(PopularityCategories.Points) as PopularityPoints
 from Products
 inner join ProductPopularityLogs
 on Products.ID = ProductPopularityLogs.Product
 inner join PopularityCategories
 on ProductPopularityLogs.Popularity = PopularityCategories.ID
 group by Products.ID
-HAVING Products.Category = 43;
 
-select * from ViewMostPopularProducts
+Create View ViewMostPopularProductsFull as
+select *
+from Products
+right outer JOIN ViewMostPopularProducts as Pop
+on Pop.Product = Products.ID
 
-Create or alter view ViewMostPopularProductsReadable as
-select Products.ID, Products.ItemNumber, Products.Name as Product, 
-Brands.Name as Brand, Categories.Name as Category, Pop.PopularityPoints
-from ViewMostPopularProducts as Pop
-inner join Products
-on Pop.ID = Products.ID
-inner join Brands
-on Products.Brand = Brands.ID
-inner join Categories
-on Products.Category = Categories.ID;
-
-Select top 5 * from ViewMostPopularProductsReadable 
-where Category = 'Processor'
-order by PopularityPoints desc;
+select * from ViewMostPopularProductsFull
+order by ViewMostPopularProductsFull.PopularityPoints desc
 
 --Kategorirapport (en rad per kategori)
 -- Sålt antal innevarande månad 
 select * from OrderDetails
 
-Create or alter view ViewSoldThisMonth
-Select SUM(OrderDetails.Quantity) as Sold
+Create or alter view ViewSoldThisMonthPerCategory as
+Select SUM(OrderDetails.Quantity) as Sold, Categories.Name
 from OrderDetails
 inner join Products
 on OrderDetails.Product = Products.ID
@@ -273,14 +259,4 @@ on Products.Category = Categories.ID
 inner join Orders
 on OrderDetails.[Order] = Orders.ID
 where Month(Orders.OrderDate) = Month(GetDate())
-
-select SUM(OrderDetails.Quantity) as Sold, Categories.ID as Category
-from OrderDetails
-inner join Products
-on OrderDetails.Product = Products.ID
-inner join Categories
-on Products.Category = Categories.ID
-GROUP BY Categories.ID
-
-
-Select
+GROUP by Categories.Name
