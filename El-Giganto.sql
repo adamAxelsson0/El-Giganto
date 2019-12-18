@@ -22,7 +22,6 @@ CREATE TABLE Products(
     Image image,
     ReleaseDate date,
     Category int foreign key REFERENCES Categories(ID),
-    Quantity int,
     Status int foreign key REFERENCES Brands(ID)
 );
 CREATE TABLE InventoryStatuses(
@@ -213,7 +212,7 @@ Select * from ViewProductReadable
 -- Se produkter(inkl Produkt.ID) med namn istället för ID
 Create or ALTER View ViewProductReadableInclID AS
 Select Products.ID as ID, Categories.Name as Category, Products.Name as Name, Brands.Name as Brand, Price, 
-[Description], [Image], ReleaseDate, Quantity, ProductStatuses.[Status] as Status
+[Description], [Image], ReleaseDate, ProductStatuses.[Status] as Status
 from Products
 inner join Brands
 on Products.Brand = Brands.ID
@@ -236,6 +235,7 @@ inner join PopularityCategories
 on ProductPopularityLogs.Popularity = PopularityCategories.ID
 group by Products.ID
 
+--
 Create View ViewMostPopularProductsFull as
 select *
 from Products
@@ -260,3 +260,14 @@ inner join Orders
 on OrderDetails.[Order] = Orders.ID
 where Month(Orders.OrderDate) = Month(GetDate())
 GROUP by Categories.Name
+
+--Produkter i lager
+Create View ViewQuantityPerProduct as
+select Product, SUM(Quantity) as Quantity
+from InventoryLogs
+GROUP by Product;
+
+select *
+FROM ViewQuantityPerProduct
+right join Products
+on ViewQuantityPerProduct.Product = Products.ID
