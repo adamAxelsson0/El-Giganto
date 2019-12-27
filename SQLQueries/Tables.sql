@@ -74,14 +74,15 @@ CREATE table Customers(
 Create Table Carts(
     ID int primary key IDENTITY(1,1),
     Customer int foreign key REFERENCES Customers(ID) not null,
-    Comment varchar(100),
     WhenLastUpdated dateTime not null,
     Discount DECIMAL(7,2),
 );
 Create TABLE CartItems(
     ID int primary key IDENTITY(1,1),
     Product int FOREIGN key REFERENCES Products(ID) not null,
-    Cart int FOREIGN key REFERENCES Carts(ID) not null,
+    Cart int FOREIGN key REFERENCES Carts(ID) 
+    --¨¨needs to be nullable since we want to remove old carts. 
+    --Then remove cartitems where cartitems don't have a cart anymore.
     Quantity int not null
 );
 Create TABLE OrderStatuses(

@@ -2,8 +2,11 @@ using System;
 
 namespace ClassLibrary
 {
-    class Product
+    public class Product
     {
+        Product()
+        {
 
+        }
     }
 }

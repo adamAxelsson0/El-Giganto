@@ -20,7 +20,7 @@ VALUES('Product sold')
  
 select * from InventoryLogs;
 insert into InventoryLogs(Product, AdjustmentDate, Quantity, Status)
-Values(6, GETDATE(), 20, 1);
+Values(13, GETDATE(), 2, 1);
  
 select * from PopularityCategories
 insert into PopularityCategories(Name, Points)
@@ -48,8 +48,8 @@ insert into Customers(FirstName, LastName, Phone, StreetAdress, City,PostalCode,
 values('Adam', 'Axelsson', '0733-333333', 'Södra Sjöbogatan 1', 'Borås',50643, 'Sweden');
  
 select * from Carts;
-Insert into Carts(Customer, Comment, WhenLastUpdated,Discount)
-VALUES(1,'Christmas Cart', GETDATE(), 0)
+Insert into Carts(Customer, WhenLastUpdated,Discount)
+VALUES(1, GETDATE(), 0)
  
 select * from CartItems
 insert into CartItems(Product, Cart, Quantity)
