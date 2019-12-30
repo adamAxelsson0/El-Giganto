@@ -11,7 +11,7 @@ Insert into Brands([Name])
 values('Onkyo');
  
 select * from Products;
-Insert into Products(ItemNumber, [Name], Brand, Price, [Description], [Image], ReleaseDate, Category, Quantity, [Status])
+Insert into Products(ItemNumber, [Name], Brand, Price, [Description], ImageURL, ReleaseDate, Category, QuantityAvailable, [Status])
 values('0000005','AMD Ryzen 7 3800X 3,9GHz Socket AM4 Box', 9, 4390, null, null, '2019-07-07', 43, 20, 1);
  
 select * from InventoryStatuses;
@@ -71,4 +71,19 @@ select * from Payments;
 INSERT into Payments([Order], PaymentDate, PaymentDetail, Amount)
 VALUES(1, GETDATE(), 'Nordea 1234-1234-1234-1234', 2290)
 
---TWO MORE
+select * from returnstatuses
+insert into returnstatuses(status)
+values('Registered from Customer')
+
+--if you need to return two of the same two seperate returns needs to be created
+select * from returns
+insert into returns(orderitem,reason,returndate,status)
+values(1,'',null,1)
+
+select * from ReservedCartItems;
+insert into ReservedCartItems(CartItems)
+values(1);
+
+select * from ReservedOrders;
+insert into ReservedOrders(OrderItem)
+values(1);

@@ -2,10 +2,11 @@
 using System.Data.SqlClient;
 using Dapper;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClassLibrary
 {
+    public enum ProductInfo { Readable, Itemnumber }
+    public enum CategoryInfo {Main}
     public class Database
     {
         private readonly string connectionString;
@@ -13,13 +14,34 @@ namespace ClassLibrary
         {
             this.connectionString = connectionString;
         }
-        public List<Product> GetProductsForUser()
+        public List<Product> GetProducts(ProductInfo productInfo)
         {
-            //var productList = new List<Product>();
             using (var connection = new SqlConnection(connectionString))
             {
-                var productList = connection.Query<Product>($"Select * from ViewProductReadable").AsList();
-                return productList;
+                if (productInfo == ProductInfo.Readable)
+                {
+                    var productList = connection.Query<Product>($"Select * from dbo.ViewProductReadable").AsList();
+                    return productList;
+                }
+                else if (productInfo == ProductInfo.Itemnumber)
+                {
+                    var itemList = connection.Query<Product>($"Select ItemNumber from Products").AsList();
+                    return itemList;
+                }
+                else//needs to be something else
+                {
+                    var productList = connection.Query<Product>($"Select * from dbo.ViewProductReadable").AsList();
+                    return productList;
+                }
+            }
+        }
+        public List<Category> GetCategories(CategoryInfo categoryInfo)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                //if(categoryInfo == CategoryInfo.Main)
+                var categoriesList = connection.Query<Category>($"Select Name from Categories where parent = 1").AsList();
+                return categoriesList;
             }
         }
         public void AddOrder()
@@ -27,6 +49,14 @@ namespace ClassLibrary
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Query<Product>($"");
+            }
+        }
+        public void AddToCart(Customer customer, Product product, int quantity)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                //costumer, product, quantity in order
+                connection.Query<Product>($"exec AdjustCart {customer},{product},{quantity}");
             }
         }
     }

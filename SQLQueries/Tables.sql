@@ -17,11 +17,11 @@ CREATE TABLE Products(
     Name varchar(50),
     Brand int foreign key REFERENCES Brands(ID),
     Price DECIMAL(7,2),
-    Description varchar(50),
-    Image image,
+    Description text,
+    ImageURL varchar(255),
     ReleaseDate date,
     Category int foreign key REFERENCES Categories(ID),
-    Quantity int,
+    QuantityAvailable int,
     Status int foreign key REFERENCES Brands(ID)
 );
 CREATE TABLE InventoryStatuses(
@@ -73,7 +73,7 @@ CREATE table Customers(
 );
 Create Table Carts(
     ID int primary key IDENTITY(1,1),
-    Customer int foreign key REFERENCES Customers(ID) not null,
+    Customer int foreign key REFERENCES Customers(ID) not null unique,
     WhenLastUpdated dateTime not null,
     Discount DECIMAL(7,2),
 );
@@ -81,7 +81,7 @@ Create TABLE CartItems(
     ID int primary key IDENTITY(1,1),
     Product int FOREIGN key REFERENCES Products(ID) not null,
     Cart int FOREIGN key REFERENCES Carts(ID) 
-    --¨¨needs to be nullable since we want to remove old carts. 
+    --needs to be nullable since we want to remove old carts. 
     --Then remove cartitems where cartitems don't have a cart anymore.
     Quantity int not null
 );
@@ -107,12 +107,21 @@ Create Table ReturnStatuses(
     ID int PRIMARY key IDENTITY (1,1),
     Status varchar(50) not null unique
 );
+--if you need to return two of the same two seperate returns needs to be created
 CREATE TABLE Returns(
     ID int PRIMARY key IDENTITY (1,1),
     OrderItem int foreign key REFERENCES OrderDetails(ID),
     Reason varchar(255),
 	ReturnDate dateTime,
     Status int FOREIGN KEY REFERENCES ReturnStatuses(ID) not NULL
+);
+CREATE TABLE ReservedOrders(
+    ID int PRIMARY key IDENTITY (1,1),
+    OrderItem int foreign key REFERENCES OrderDetails(ID) not null unique
+);
+CREATE TABLE ReservedCartItems(
+    ID int PRIMARY key IDENTITY (1,1),
+    Cartitems int foreign key REFERENCES CartItems(ID) not null unique
 );
 CREATE TABLE Payments(
     ID int PRIMARY KEY IDENTITY(1,1),
@@ -121,4 +130,6 @@ CREATE TABLE Payments(
     PaymentDetail varchar(255),
     Amount DECIMAL(7,2) not null
 );
+
+drop
  

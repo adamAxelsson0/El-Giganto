@@ -1,53 +1,46 @@
---Order process
-Create or alter procedure EntireOrderProcess
-@customer int, @product int, 
-@quantity int, @priceperunit DECIMAL(7,2) as
-Begin
-	insert into orders(customer, orderdate, ShippingDate, Status)
-	values(@customer, GETDATE(), null, 1);
-
-	insert into orderdetails([order], product, quantity, priceperunit)
-	values(SCOPE_IDENTITY(), @product, @quantity, @priceperunit);
-
-	insert into InventoryLogs(product, AdjustmentDate, Quantity, Status)
-	values(@product, GetDate(), @quantity, 4);
-
-	update Products set Quantity = quantity - @quantity where id = @product;
-end
-
---Order process with cart (should be used with customer, since we want to delete cart when order has been made.)
-create or alter procedure EntireOrderProcessWithCart
-@customer int, @product int, 
-@quantity int, @priceperunit DECIMAL(7,2),
+create or alter procedure EntireOrderProcess
 @cart int as
-Begin
+Begin TRANSACTION
+begin TRY
+
 	insert into orders(customer, orderdate, ShippingDate, Status)
-	values(@customer, GETDATE(), null, 1);
-
+    select Carts.Customer, GETDATE(), null, 1
+    from Carts
+    where ID = @cart
+   
 	insert into orderdetails([order], product, quantity, priceperunit)
-	values(SCOPE_IDENTITY(), @product, @quantity, @priceperunit);
+    SELECT SCOPE_IDENTITY(), Product, CartItems.Quantity as Quantity, Products.Price as PricePerUnit
+    from CartItems
+    inner join Products
+    on CartItems.Product = Products.ID
+	where CartItems.Cart = @cart
 
-	insert into InventoryLogs(product, AdjustmentDate, Quantity, Status)
-	values(@product, GetDate(), @quantity, 4);
+	insert into ReservedOrdersDetails(OrderItem)
+    Select OrderDetails.ID
+    from OrderDetails
+    inner join Orders
+    on OrderDetails.[Order] = Orders.ID
+    where Orders.ID = IDENT_CURRENT( 'orders' )
 
-	update Products set Quantity = quantity - @quantity where id = @product;
+    insert into ProductPopularityLogs(Product, Popularity, LogDate)
+    select Product, 3, GetDate()
+    from CartItems
+    where cart = @cart
+    
+    delete r
+    from ReservedCartItems as r
+    inner join CartItems
+    on r.Cartitems = CartItems.ID
+    where CartItems.Cart = @cart
+
+    delete from Cartitems where CartItems.Cart = @Cart
 
     delete from Carts where Carts.ID = @Cart;
 
-	delete from Cartitems where CartItems.Cart = @Cart
-end
+    commit TRANSACTION
+end TRY
+begin catch
+rollback TRANSACTION
+end CATCH
 
-declare @cart int = 1;
-declare @customer int = 1;
-declare @product int = 1;
-declare @quantity int = 1;
-declare @priceperunit DECIMAL(7,2) = 2290;
-exec EntireOrderProcess @customer, @product, @quantity,@priceperunit
-exec EntireOrderProcessWithCart @customer, @product, @quantity,@priceperunit, @cart
-
-select * from Orders
-select * from OrderDetails
-select * from InventoryLogs
-select * from products
-select * from carts
-
+exec EntireOrderProcess 1

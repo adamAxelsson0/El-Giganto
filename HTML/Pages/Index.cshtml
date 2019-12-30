@@ -1,10 +1,26 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "El Giganto";
+    var db = new ClassLibrary.Database
+    ("Server=40.85.84.155;Database=ELGIGANTO5;User=Student5;Password=YH-student@2019;");
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">El Giganto</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+<div class="text-left"">
+    @foreach(var product in db.GetProducts(ClassLibrary.ProductInfo.Readable)){
+        <p>@product.Name</p>
+        <p>@product.Price:-</p>
+    }
+</div>
+<div>
+    @foreach (var category in db.GetCategories(ClassLibrary.CategoryInfo.Main))
+                        {
+                        <li class="nav-item"> 
+                            <p>@category.Name:-</p>
+                        </li>  
+                        }
 </div>
