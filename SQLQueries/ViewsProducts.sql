@@ -14,7 +14,7 @@ Select * from ViewProductReadable
  
 -- Se produkter(inkl Produkt.ID) med namn istället för ID
 Create or ALTER View ViewProductReadableInclID AS
-Select Products.ID as ID, Categories.Name as Category, Products.Name as Name, Brands.Name as Brand, Price, 
+Select Products.ID as ID, ItemNumber, Categories.Name as Category, Products.Name as Name, Brands.Name as Brand, Price, 
 [Description], ImageURL, ReleaseDate, ProductStatuses.[Status] as Status, QuantityAvailable
 from Products
 inner join Brands

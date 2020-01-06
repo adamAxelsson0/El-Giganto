@@ -14,11 +14,13 @@ namespace ClassLibrary
         public DateTime ReleaseDate { get; private set; }
         public string Status { get; private set; }
         public double QuantityAvailable { get; private set; }
+        public int ID { get; private set; }
 
-        public Product(string itemnumber, string category, string name, string brand, decimal price,
+        public Product(int Id, string itemnumber, string category, string name, string brand, decimal price,
         string description, string imageURL, DateTime releaseDate, string status,
         int quantityAvailable)
         {
+            this.ID = Id;
             this.ItemNumber = itemnumber;
             this.Category = category;
             this.Name = name;

@@ -115,9 +115,9 @@ CREATE TABLE Returns(
 	ReturnDate dateTime,
     Status int FOREIGN KEY REFERENCES ReturnStatuses(ID) not NULL
 );
-CREATE TABLE ReservedOrders(
+CREATE TABLE ReservedOrdersDetails(
     ID int PRIMARY key IDENTITY (1,1),
-    OrderItem int foreign key REFERENCES OrderDetails(ID) not null unique
+    OrderItem int foreign key REFERENCES CartItems(ID) not null unique
 );
 CREATE TABLE ReservedCartItems(
     ID int PRIMARY key IDENTITY (1,1),

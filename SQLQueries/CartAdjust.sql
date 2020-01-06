@@ -2,11 +2,14 @@
 Create or Alter Procedure AdjustCart 
 @customer int, @product int, @quantity int as
 BEGIN
---if exists( SELECT QuantityAvailable
---from Products
---WHERE QuantityAvailable > 0 AND ID = @PRODUCT)
 
---BEGIN
+If Exists(
+    select QuantityAvailable 
+    from Products
+    where QuantityAvailable >= @quantity
+)
+begin
+
 --Meed to create cart if it does not exist
 If not exists(select ID from Carts 
 where Customer = @customer)
@@ -14,7 +17,6 @@ begin
 Insert into Carts(Customer, WhenLastUpdated)
 values(@customer, getDate())
 END
-
 
 If exists(
 SELECT Customer, Product  
@@ -54,6 +56,9 @@ select ID as CartID
 from Carts
 where Customer = @customer
 
+--
+END
+Else Select 'Not enough in stock.'
 --END--ends our if quantityavailable > 0
 --else select 'Not enough in stock'
 END--ends entire procedure
