@@ -6,7 +6,7 @@ BEGIN
 If Exists(
     select QuantityAvailable 
     from Products
-    where QuantityAvailable >= @quantity
+    where QuantityAvailable >= @quantity and Products.ID = @product
 )
 begin
 
@@ -26,7 +26,8 @@ on CartItems.Cart = Carts.ID
 WHERE Carts.Customer = @customer and product = @product)--customer and product exists
 
 begin
-update CartItems set Quantity += @quantity
+update CartItems set Quantity += @quantity 
+where Product = @product
 end
 
 ELSE IF exists(
