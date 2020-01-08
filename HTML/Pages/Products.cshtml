@@ -1,0 +1,35 @@
+﻿@page
+@model HTML.Pages.ProductsModel
+@{
+    ViewData["Title"] = "Product";
+}
+@{
+var db = new ClassLibrary.Database
+("Server=40.85.84.155;Database=ELGIGANTO5;User=Student5;Password=YH-student@2019;");
+}
+<div class="currentProduct">
+    <h1>@Model.currentProduct.Name</h1>
+    <img src=@Model.currentProduct.ImageURL style="width:420px;">
+    <p>Artikelnummer: @Model.currentProduct.ItemNumber</p>
+    <p>Kategori: @Model.currentProduct.Category</p>
+    <p>Tillverkare: @Model.currentProduct.Brand</p>
+    <p>Pris: @Model.currentProduct.Price</p>
+    <p>Släppdatum: @Model.currentProduct.ReleaseDate.ToString("yyyy/MM/dd")</p>
+    <p>Lager: @Model.currentProduct.Status</p>
+    <p>Antal i lager: @Model.currentProduct.QuantityAvailable</p>
+
+</div>
+
+<div class="products-columns">
+@foreach (var product in @db.GetProducts(ClassLibrary.ProductInfo.Readable))
+{
+<div class="products">
+    <div class="image">
+        <img src=@product.ImageURL style="width:40px;">
+    </div>
+    <div class="link">
+        <a class="nav-link text-dark" href="/Products?product=@product.ItemNumber">@product.Name</a>
+    </div>
+</div>
+}
+</div>

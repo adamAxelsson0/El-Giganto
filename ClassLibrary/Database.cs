@@ -2,11 +2,13 @@
 using System.Data.SqlClient;
 using Dapper;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClassLibrary
 {
     public enum ProductInfo { Readable, Itemnumber }
-    public enum CategoryInfo {Main}
+    public enum CategoryInfo { Main }
+    public enum PopularityGain { Selected, AddedToCart, Ordered }
     public class Database
     {
         private readonly string connectionString;
@@ -20,7 +22,7 @@ namespace ClassLibrary
             {
                 if (productInfo == ProductInfo.Readable)
                 {
-                    var productList = connection.Query<Product>($"Select * from dbo.ViewProductReadable").AsList();
+                    var productList = connection.Query<Product>($"Select * from dbo.ViewProductReadableInclID").AsList();
                     return productList;
                 }
                 else if (productInfo == ProductInfo.Itemnumber)
@@ -30,9 +32,23 @@ namespace ClassLibrary
                 }
                 else//needs to be something else
                 {
-                    var productList = connection.Query<Product>($"Select * from dbo.ViewProductReadable").AsList();
+                    var productList = connection.Query<Product>($"Select * from dbo.ViewProductReadableInclID").AsList();
                     return productList;
                 }
+            }
+        }
+        public Product GetProduct(string itemNumber)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                return connection.Query<Product>($"Select * from dbo.ViewProductReadableInclID where itemnumber = {itemNumber}").First();
+            }
+        }
+        public void GainPopularity(int ID)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Query<Product>($"exec GainPopWhenSelected {ID}");
             }
         }
         public List<Category> GetCategories(CategoryInfo categoryInfo)
