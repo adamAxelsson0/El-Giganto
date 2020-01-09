@@ -6,8 +6,8 @@ using System.Linq;
 
 namespace ClassLibrary
 {
-    public enum ProductInfo { Readable, Itemnumber }
-    public enum CategoryInfo { Main }
+    public enum ProductInfo { Readable, Itemnumber, CPU = 43 }
+    public enum CategoryInfo { Main = 1, ComputerComponents = 40 }
     public enum PopularityGain { Selected, AddedToCart, Ordered }
     public class Database
     {
@@ -22,18 +22,22 @@ namespace ClassLibrary
             {
                 if (productInfo == ProductInfo.Readable)
                 {
-                    var productList = connection.Query<Product>($"Select * from dbo.ViewProductReadableInclID").AsList();
-                    return productList;
+                    return connection.Query<Product>($"Select * from dbo.ViewProductReadableInclID").AsList();
                 }
                 else if (productInfo == ProductInfo.Itemnumber)
                 {
-                    var itemList = connection.Query<Product>($"Select ItemNumber from Products").AsList();
-                    return itemList;
+                    return connection.Query<Product>($"Select ItemNumber from Products").AsList();
+                }
+                else if (productInfo == ProductInfo.CPU)
+                {
+                    return connection.Query<Product>("Select ViewProductReadableInclID.* "+
+                     "from ViewProductReadableInclID " +
+                    "inner join Products on ViewProductReadableInclID.ID = Products.ID "+
+                    $"where Products.category = {Convert.ToInt32(productInfo)}").AsList();
                 }
                 else//needs to be something else
                 {
-                    var productList = connection.Query<Product>($"Select * from dbo.ViewProductReadableInclID").AsList();
-                    return productList;
+                    return connection.Query<Product>($"Select * from dbo.ViewProductReadableInclID").AsList();
                 }
             }
         }
@@ -55,9 +59,15 @@ namespace ClassLibrary
         {
             using (var connection = new SqlConnection(connectionString))
             {
-                //if(categoryInfo == CategoryInfo.Main)
-                var categoriesList = connection.Query<Category>($"Select Name from Categories where parent = 1").AsList();
-                return categoriesList;
+                if (categoryInfo == CategoryInfo.Main)
+                {
+                    return connection.Query<Category>($"Select Name from Categories where parent = {Convert.ToInt32(categoryInfo)}").AsList();
+                    
+                }
+                else
+                {
+                    return connection.Query<Category>($"Select Name from Categories where parent = {Convert.ToInt32(categoryInfo)}").AsList();
+                }
             }
         }
         public void AddOrder()
