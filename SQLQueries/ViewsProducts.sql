@@ -1,4 +1,4 @@
--- Se produkter med namn istället för ID
+-- Se produkter med namn istället för ID, TA EV BORT
 Create or ALTER View ViewProductReadable AS
 Select ItemNumber, Categories.Name as Category, Products.Name as Name, Brands.Name as Brand, Price, 
 [Description], ImageURL, ReleaseDate, ProductStatuses.[Status] as Status, QuantityAvailable

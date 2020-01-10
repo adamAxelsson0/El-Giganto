@@ -1,17 +1,22 @@
 ﻿@page
-@model HTML.Pages.PCComponentsModel
+@model HTML.Pages.CategoriesModel
 @{
     ViewData["Title"] = "Datorkomponenter";
 }
+
 @{
 var db = new ClassLibrary.Database
 ("Server=40.85.84.155;Database=ELGIGANTO5;User=Student5;Password=YH-student@2019;");
 }
 <div class="products-columns">
-@foreach (var product in @db.GetProducts(ClassLibrary.ProductInfo.CPU))
+@foreach (var product in @db.GetProducts(@Model.currentCategory.ID))
 {
+    <div style="float:left;">
+        <img src=@product.ImageURL style="width:40px;">
+    </div>
     <div class="link">
         <a class="nav-link text-dark" href="/Products?product=@product.ItemNumber">@product.Name</a>
     </div>
 }
+
 </div>

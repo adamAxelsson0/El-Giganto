@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ClassLibrary
 {
-    public enum ProductInfo { Readable, Itemnumber, CPU = 43 }
+    public enum ProductInfo { Readable, Itemnumber, CPU = 43, MoBo = 44, Chassi = 45 }
     public enum CategoryInfo { Main = 1, ComputerComponents = 40 }
     public enum PopularityGain { Selected, AddedToCart, Ordered }
     public class Database
@@ -28,24 +28,29 @@ namespace ClassLibrary
                 {
                     return connection.Query<Product>($"Select ItemNumber from Products").AsList();
                 }
-                else if (productInfo == ProductInfo.CPU)
+                else  //(productInfo == ProductInfo.CPU)
                 {
                     return connection.Query<Product>("Select ViewProductReadableInclID.* "+
                      "from ViewProductReadableInclID " +
                     "inner join Products on ViewProductReadableInclID.ID = Products.ID "+
                     $"where Products.category = {Convert.ToInt32(productInfo)}").AsList();
                 }
-                else//needs to be something else
-                {
-                    return connection.Query<Product>($"Select * from dbo.ViewProductReadableInclID").AsList();
-                }
             }
         }
-        public Product GetProduct(string itemNumber)
+        public Product GetProduct(CategoryInfo category)
         {
             using (var connection = new SqlConnection(connectionString))
             {
-                return connection.Query<Product>($"Select * from dbo.ViewProductReadableInclID where itemnumber = {itemNumber}").First();
+                return connection.Query<Product>($"Select v.* from dbo.ViewProductReadableInclID as v inner join Products "+
+                $"where category = {Convert.ToInt32(category)}"+
+                $" ").First();
+            }
+        }
+        public Product GetProduct(string itemnumber)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                return connection.Query<Product>($"Select * from dbo.ViewProductReadableInclID where itemnumber = '{itemnumber}'").First();
             }
         }
         public void GainPopularity(int ID)
@@ -61,14 +66,20 @@ namespace ClassLibrary
             {
                 if (categoryInfo == CategoryInfo.Main)
                 {
-                    return connection.Query<Category>($"Select Name from Categories where parent = {Convert.ToInt32(categoryInfo)}").AsList();
+                    return connection.Query<Category>($"Select ID, Name from Categories where parent = {Convert.ToInt32(categoryInfo)}").AsList();
                     
                 }
                 else
                 {
-                    return connection.Query<Category>($"Select Name from Categories where parent = {Convert.ToInt32(categoryInfo)}").AsList();
+                    return connection.Query<Category>($"Select ID, Name from Categories where parent = {Convert.ToInt32(categoryInfo)}").AsList();
                 }
             }
+        }
+        public Category GetCategory(string category){
+            using (var connection = new SqlConnection(connectionString))
+            {
+                return connection.Query<Category>($"Select ID, Name from Categories where name = '{category}'").First();
+            } 
         }
         public void AddOrder()
         {

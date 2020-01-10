@@ -20,16 +20,11 @@ var db = new ClassLibrary.Database
 
 </div>
 
-<div class="products-columns">
-@foreach (var product in @db.GetProducts(ClassLibrary.ProductInfo.Readable))
-{
-<div class="products">
-    <div class="image">
-        <img src=@product.ImageURL style="width:40px;">
-    </div>
-    <div class="link">
-        <a class="nav-link text-dark" href="/Products?product=@product.ItemNumber">@product.Name</a>
-    </div>
-</div>
+
+@if (@Model.currentProduct.Brand.Contains("AMD")){
+    <body style="background-image: url('https://i1.wp.com/beth.technology/wp-content/uploads/2019/12/AMD-Stock-is-Approaching-a-20-Year-Roadblock-%E2%80%93-Will-History-Repeat-1.png?fit=1280%2C600&ssl=1');"></body>
 }
-</div>
+
+@if (@Model.currentProduct.Name.Contains("Intel")){
+    <body style="background-color: blue"></body>
+}

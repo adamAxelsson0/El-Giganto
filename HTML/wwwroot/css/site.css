@@ -24,9 +24,8 @@ html {
 .border-bottom {
   border-bottom: 1px solid #8ccef5;
 }
-
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+  box-shadow: 0 .25rem .75rem rgba(10, 10, 10, 0);
 }
 
 button.accept-policy {
@@ -44,6 +43,7 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+  background-color: rgb(201, 233, 241);
 }
 .footer {
   position: absolute;

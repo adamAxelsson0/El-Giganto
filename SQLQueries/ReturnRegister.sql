@@ -5,6 +5,7 @@ create or alter PROCEDURE RegisterReturn
 insert into returns(orderitem,reason,returndate,status)
 values(@orderitem,@reason,null,1);
 
+--orderitem, reason
 exec RegisterReturn 1,''
 
 
@@ -56,3 +57,5 @@ update Returns
 set [Status] = @status
 where id = @return
 END 
+
+exec Returnchanges 2,

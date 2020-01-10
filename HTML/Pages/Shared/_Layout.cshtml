@@ -43,7 +43,7 @@
     @if(@category.Name == "Datorkomponenter"){
         @foreach (var subCategory in db.GetCategories(ClassLibrary.CategoryInfo.ComputerComponents))
         {
-            <a class="dropdown-item" href="/PCComponents">@subCategory.Name</a>
+            <a class="dropdown-item" href="/Categories?category=@subCategory.Name">@subCategory.Name</a>
         }
     }
     else{
