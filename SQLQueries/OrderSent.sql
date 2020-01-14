@@ -1,8 +1,4 @@
 Create or Alter procedure OrderSent @order int as
-if exists(
-SELECT Orders.ShippingDate
-FROM Orders
-WHERE Orders.ShippingDate = null and Orders.ID = @order)
 begin transaction
 begin try
 

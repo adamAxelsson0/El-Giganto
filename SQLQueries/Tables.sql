@@ -21,7 +21,7 @@ CREATE TABLE Products(
     ImageURL varchar(255),
     ReleaseDate date,
     Category int foreign key REFERENCES Categories(ID),
-    QuantityAvailable int,
+    QuantityAvailable int, --might want to add check if >= 0
     Status int foreign key REFERENCES Brands(ID)
 );
 CREATE TABLE InventoryStatuses(
@@ -63,13 +63,14 @@ CREATE table Specifications_Products(
 );
 CREATE table Customers(
     ID int PRIMARY key IDENTITY(1,1),
-    FirstName varchar(50),
-    LastName varchar(50),
+    FirstName varchar(50) not null,
+    LastName varchar(50) not null,
     Phone varchar(15),
     StreetAdress varchar(50),
     City varchar(50),
     PostalCode varchar(10),
-    Country varchar(50)
+    Country varchar(50),
+    Email varchar(50) unique not null
 );
 Create Table Carts(
     ID int primary key IDENTITY(1,1),
@@ -128,8 +129,6 @@ CREATE TABLE Payments(
     [Order] int FOREIGN KEY REFERENCES Orders(ID) not null,
     PaymentDate DateTime not null,
     PaymentDetail varchar(255),
-    Amount DECIMAL(7,2) not null
+    Amount DECIMAL(7,2) not null check Amount > 0
 );
-
-drop
  

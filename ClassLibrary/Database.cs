@@ -96,5 +96,13 @@ namespace ClassLibrary
                 connection.Query<Product>($"exec AdjustCart {customer},{product},{quantity}");
             }
         }
+        public List<Specification> GetSpecs(Product product)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                //costumer, product, quantity in order
+                return connection.Query<Specification>($"exec GetSpecsForProduct {product.ID}").AsList();
+            }
+        }
     }
 }

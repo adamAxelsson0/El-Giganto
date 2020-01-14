@@ -10,6 +10,7 @@ var db = new ClassLibrary.Database
 <div class="currentProduct">
     <h1>@Model.currentProduct.Name</h1>
     <img src=@Model.currentProduct.ImageURL style="width:420px;">
+    <button type="button" onclick="alert('Inte implementerad ännu.')">Lägg i kundvagn</button>
     <p>Artikelnummer: @Model.currentProduct.ItemNumber</p>
     <p>Kategori: @Model.currentProduct.Category</p>
     <p>Tillverkare: @Model.currentProduct.Brand</p>
@@ -17,12 +18,32 @@ var db = new ClassLibrary.Database
     <p>Släppdatum: @Model.currentProduct.ReleaseDate.ToString("yyyy/MM/dd")</p>
     <p>Lager: @Model.currentProduct.Status</p>
     <p>Antal i lager: @Model.currentProduct.QuantityAvailable</p>
-
 </div>
 
+<p>
+  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#desc" aria-expanded="false" aria-controls="desc">
+    Produktbeskrivning
+  </button>
+  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+    Specifikationer
+  </button>
+</p>
+<div class="collapse" id="desc">
+  <div class="card card-body">
+    @Model.currentProduct.Description
+  </div>
+</div>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+      @foreach (var spec in @db.GetSpecs(@Model.currentProduct))
+      {
+          <p>@spec.Name: @spec.Value</p>
+      }
+  </div>
+</div>
 
 @if (@Model.currentProduct.Brand.Contains("AMD")){
-    <body style="background-image: url('https://i1.wp.com/beth.technology/wp-content/uploads/2019/12/AMD-Stock-is-Approaching-a-20-Year-Roadblock-%E2%80%93-Will-History-Repeat-1.png?fit=1280%2C600&ssl=1');"></body>
+    <body style="background-color: orange"></body>
 }
 
 @if (@Model.currentProduct.Name.Contains("Intel")){

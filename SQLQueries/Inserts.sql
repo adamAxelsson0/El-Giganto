@@ -44,8 +44,8 @@ insert into Specifications_Products(product, Specification, [value])
 values (4, 2 ,'6 st.')
  
 select * from Customers;
-insert into Customers(FirstName, LastName, Phone, StreetAdress, City,PostalCode,Country)
-values('Adam', 'Axelsson', '0733-333333', 'Södra Sjöbogatan 1', 'Borås',50643, 'Sweden');
+insert into Customers(FirstName, LastName, Phone, StreetAdress, City,PostalCode,Country,Email)
+values('Adam', 'Axelsson', '0733-333333', 'Södra Sjöbogatan 1', 'Borås',50643, 'Sweden', '@gmail.com');
  
 select * from Carts;
 Insert into Carts(Customer, WhenLastUpdated,Discount)
@@ -66,7 +66,8 @@ VALUES(1, GETDATE(), null, 1)
 select * from OrderDetails;
 insert into OrderDetails([Order], Product, Quantity,PricePerUnit)
 VALUES(1, 1, 2, 2290)
- 
+
+--faktura 
 select * from Payments;
 INSERT into Payments([Order], PaymentDate, PaymentDetail, Amount)
 VALUES(1, GETDATE(), 'Nordea 1234-1234-1234-1234', 2290)
